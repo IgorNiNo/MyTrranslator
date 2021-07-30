@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Словарь</string>
+    <string name="button_search">Поиск</string>
+    <string name="search_hint">Новое слово</string>
+    <string name="delete_description">X</string>
+    <string name="error_textview_stub">Ошибка</string>
+    <string name="reload_button">Перезагрузить</string>
+    <string name="empty_server_response_on_success">Сервер не отвечает</string>
+    <string name="undefined_error">Неизвестная ошибка</string>
 </resources>
