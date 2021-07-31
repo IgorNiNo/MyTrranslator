@@ -1,33 +1,13 @@
 package ru.myproject.mytrranslator.view.base
 
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ru.myproject.mytrranslator.model.data.AppState
-import ru.myproject.mytrranslator.presenter.Presenter
+import ru.myproject.mytrranslator.viewmodel.BaseViewModel
+import ru.myproject.mytrranslator.viewmodel.Interactor
 
-abstract class BaseActivity<T : AppState> : AppCompatActivity(), View {
+abstract class BaseActivity<T : AppState, I:Interactor<T>> : AppCompatActivity() {
 
-    // Храним ссылку на презентер
-    protected lateinit var presenter: Presenter<T, View>
+    abstract val model: BaseViewModel<T>
 
-    protected abstract fun createPresenter(): Presenter<T, View>
-
-    abstract override fun renderData(appState: AppState)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        presenter = createPresenter()
-    }
-
-    // Когда View готова отображать данные, передаём ссылку на View в презентер
-    override fun onStart() {
-        super.onStart()
-        presenter.attachView(this)
-    }
-
-    // При пересоздании или уничтожении View удаляем ссылку, иначе в презентере будет ссылка на несуществующую View
-    override fun onStop() {
-        super.onStop()
-        presenter.detachView(this)
-    }
+    abstract fun renderData(dataModel: T)
 }

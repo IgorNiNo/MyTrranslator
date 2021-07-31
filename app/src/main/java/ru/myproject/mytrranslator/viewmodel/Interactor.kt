@@ -1,8 +1,8 @@
-package ru.myproject.mytrranslator.presenter
+package ru.myproject.mytrranslator.viewmodel
 
 import io.reactivex.Observable
 
-// Ещё выше презентера стоит интерактор. Здесь уже чистая бизнес-логика
+// Интерактор перенесем в слой ViewModel. Здесь уже чистая бизнес-логика
 interface Interactor<T> {
 
     // Use Сase: получение данных для вывода на экран
