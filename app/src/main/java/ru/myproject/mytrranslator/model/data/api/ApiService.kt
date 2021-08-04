@@ -1,4 +1,4 @@
-package ru.myproject.mytrranslator.model.datasource
+package ru.myproject.mytrranslator.model.data.api
 
 import io.reactivex.Observable
 import retrofit2.http.GET

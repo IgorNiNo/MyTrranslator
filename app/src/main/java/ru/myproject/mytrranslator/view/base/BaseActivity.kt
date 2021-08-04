@@ -1,33 +1,53 @@
 package ru.myproject.mytrranslator.view.base
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
+import ru.myproject.mytrranslator.R
 import ru.myproject.mytrranslator.model.data.AppState
-import ru.myproject.mytrranslator.presenter.Presenter
+import ru.myproject.mytrranslator.utils.network.isOnline
+import ru.myproject.mytrranslator.utils.ui.AlertDialogFragment
+import ru.myproject.mytrranslator.viewmodel.BaseViewModel
+import ru.myproject.mytrranslator.viewmodel.Interactor
 
-abstract class BaseActivity<T : AppState> : AppCompatActivity(), View {
+abstract class BaseActivity<T : AppState, I : Interactor<T>> : AppCompatActivity() {
 
-    // Храним ссылку на презентер
-    protected lateinit var presenter: Presenter<T, View>
+    abstract val model: BaseViewModel<T>
 
-    protected abstract fun createPresenter(): Presenter<T, View>
+    protected var isNetworkAvailable: Boolean = false
 
-    abstract override fun renderData(appState: AppState)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        presenter = createPresenter()
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        isNetworkAvailable = isOnline(applicationContext)
     }
 
-    // Когда View готова отображать данные, передаём ссылку на View в презентер
-    override fun onStart() {
-        super.onStart()
-        presenter.attachView(this)
+    override fun onResume() {
+        super.onResume()
+        isNetworkAvailable = isOnline(applicationContext)
+        if (!isNetworkAvailable && isDialogNull()) {
+            showNoInternetConnectionDialog()
+        }
     }
 
-    // При пересоздании или уничтожении View удаляем ссылку, иначе в презентере будет ссылка на несуществующую View
-    override fun onStop() {
-        super.onStop()
-        presenter.detachView(this)
+    protected fun showNoInternetConnectionDialog() {
+        showAlertDialog(
+            getString(R.string.dialog_title_device_is_offline),
+            getString(R.string.dialog_message_device_is_offline)
+        )
+    }
+
+    protected fun showAlertDialog(title: String?, message: String?) {
+        AlertDialogFragment.newInstance(title, message)
+            .show(supportFragmentManager, DIALOG_FRAGMENT_TAG)
+    }
+
+    private fun isDialogNull(): Boolean {
+        return supportFragmentManager.findFragmentByTag(DIALOG_FRAGMENT_TAG) == null
+    }
+
+    abstract fun renderData(dataModel: T)
+
+    companion object {
+        private const val DIALOG_FRAGMENT_TAG = "74a54328-5d62-46bf-ab6b-cbf5d8c79522"
     }
 }
