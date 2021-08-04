@@ -7,11 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main_recyclerview_item.view.*
 import ru.myproject.mytrranslator.R
 import ru.myproject.mytrranslator.model.data.DataModel
+import ru.myproject.mytrranslator.utils.convertMeaningsToString
 
 class MainAdapter(
-    private var onListItemClickListener: OnListItemClickListener,
-    private var data: List<DataModel>
+    private var onListItemClickListener: OnListItemClickListener
 ) : RecyclerView.Adapter<MainAdapter.RecyclerItemViewHolder>() {
+
+    private var data: List<DataModel> = arrayListOf()
 
     fun setData(data: List<DataModel>) {
         this.data = data
@@ -38,9 +40,7 @@ class MainAdapter(
         fun bind(data: DataModel) {
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.header_textview_recycler_item.text = data.text
-                itemView.description_textview_recycler_item.text =
-                    data.meanings?.get(0)?.translation?.translation
-
+                itemView.description_textview_recycler_item.text = convertMeaningsToString(data.meanings!!)
                 itemView.setOnClickListener { openInNewWindow(data) }
             }
         }

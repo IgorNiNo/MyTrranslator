@@ -1,32 +1,44 @@
 package ru.myproject.mytrranslator.view.main
 
 import android.os.Bundle
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.myproject.mytrranslator.R
 import ru.myproject.mytrranslator.model.data.AppState
 import ru.myproject.mytrranslator.model.data.DataModel
+import ru.myproject.mytrranslator.utils.network.isOnline
 import ru.myproject.mytrranslator.view.base.BaseActivity
 import ru.myproject.mytrranslator.view.main.adapter.MainAdapter
+import javax.inject.Inject
 
 // Контракта уже нет
 class MainActivity : BaseActivity<AppState, MainInteractor>() {
 
-    // Создаём модель
-    override val model: MainViewModel by lazy {
-        ViewModelProvider.NewInstanceFactory().create(MainViewModel::class.java)
-    }
+    // Внедряем фабрику для создания ViewModel
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    // Паттерн Observer в действии. Именно с его помощью мы подписываемся на изменения в LiveData
-    private val observer = Observer<AppState> { renderData(it) }
+    // Создаём модель
+    override lateinit var model: MainViewModel
 
     // Адаптер для отображения списка вариантов перевода
-    private var adapter: MainAdapter? = null
+    private val adapter: MainAdapter by lazy {
+        MainAdapter(onListItemClickListener)
+    }
+
+    private val fabClickListener: View.OnClickListener =
+        View.OnClickListener {
+            val searchDialogFragment = SearchDialogFragment.newInstance()
+            searchDialogFragment.setOnSearchClickListener(onSearchClickListener)
+            searchDialogFragment.show(supportFragmentManager, BOTTOM_SHEET_FRAGMENT_DIALOG_TAG)
+        }
 
     // Обработка нажатия элемента списка
     private val onListItemClickListener: MainAdapter.OnListItemClickListener =
@@ -36,38 +48,50 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
             }
         }
 
+    private val onSearchClickListener: SearchDialogFragment.OnSearchClickListener =
+        object : SearchDialogFragment.OnSearchClickListener {
+            override fun onClick(searchWord: String) {
+                isNetworkAvailable = isOnline(applicationContext)
+                if (isNetworkAvailable) {
+                    model.getData(searchWord, isNetworkAvailable)
+                } else {
+                    showNoInternetConnectionDialog()
+                }
+            }
+        }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        // Сообщаем Dagger’у, что тут понадобятся зависимости
+        AndroidInjection.inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        search_fab.setOnClickListener {
-            val searchDialogFragment = SearchDialogFragment.newInstance()
-            searchDialogFragment.setOnSearchClickListener(object : SearchDialogFragment.OnSearchClickListener {
-                override fun onClick(searchWord: String) {
-                    // Обратите внимание на этот ключевой момент. У ViewModel мы получаем LiveData
-                    // через метод getData и подписываемся на изменения, передавая туда observer
-                    model.getData(searchWord, true).observe(this@MainActivity, observer)
-                }
-            })
-            searchDialogFragment.show(supportFragmentManager, BOTTOM_SHEET_FRAGMENT_DIALOG_TAG)
-        }
+
+        // Фабрика уже готова, можно создавать ViewModel
+        model = viewModelFactory.create(MainViewModel::class.java)
+        model.subscribe().observe(this@MainActivity, Observer<AppState> {
+            renderData(it)
+        })
+
+        search_fab.setOnClickListener(fabClickListener)
+        main_activity_recyclerview.layoutManager = LinearLayoutManager(applicationContext)
+        main_activity_recyclerview.adapter = adapter
     }
 
     override fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Success -> {
-                val dataModel = appState.data
-                if (dataModel == null || dataModel.isEmpty()) {
-                    showErrorScreen(getString(R.string.empty_server_response_on_success))
+                showViewWorking()
+                val data = appState.data
+                if (data.isNullOrEmpty()) {
+                    showAlertDialog(
+                        getString(R.string.dialog_tittle_sorry),
+                        getString(R.string.empty_server_response_on_success)
+                    )
                 } else {
-                    showViewSuccess()
-                    if (adapter == null) {
-                        main_activity_recyclerview.layoutManager =
-                            LinearLayoutManager(applicationContext)
-                        main_activity_recyclerview.adapter =
-                            MainAdapter(onListItemClickListener, dataModel)
-                    } else {
-                        adapter!!.setData(dataModel)
-                    }
+                    adapter.setData(data)
                 }
             }
             is AppState.Loading -> {
@@ -82,39 +106,22 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
                 }
             }
             is AppState.Error -> {
-                showErrorScreen(appState.error.message)
+                showViewWorking()
+                showAlertDialog(getString(R.string.error_stub), appState.error.message)
             }
         }
     }
 
-    private fun showErrorScreen(error: String?) {
-        showViewError()
-        error_textview.text = error ?: getString(R.string.undefined_error)
-        reload_button.setOnClickListener {
-            // В случае ошибки мы повторно запрашиваем данные и подписываемся на изменения
-            model.getData("hi", true).observe(this, observer)
-        }
-    }
-
-    private fun showViewSuccess() {
-        success_linear_layout.visibility = VISIBLE
+    private fun showViewWorking() {
         loading_frame_layout.visibility = GONE
-        error_linear_layout.visibility = GONE
     }
 
     private fun showViewLoading() {
-        success_linear_layout.visibility = GONE
         loading_frame_layout.visibility = VISIBLE
-        error_linear_layout.visibility = GONE
-    }
-
-    private fun showViewError() {
-        success_linear_layout.visibility = GONE
-        loading_frame_layout.visibility = GONE
-        error_linear_layout.visibility = VISIBLE
     }
 
     companion object {
-        private const val BOTTOM_SHEET_FRAGMENT_DIALOG_TAG = "74a54328-5d62-46bf-ab6b-cbf5fgt0-092395"
+        private const val BOTTOM_SHEET_FRAGMENT_DIALOG_TAG =
+            "74a54328-5d62-46bf-ab6b-cbf5fgt0-092395"
     }
 }

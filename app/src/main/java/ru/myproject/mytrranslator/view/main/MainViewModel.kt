@@ -1,22 +1,21 @@
 package ru.myproject.mytrranslator.view.main
 
 import androidx.lifecycle.LiveData
+import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
 import ru.myproject.mytrranslator.model.data.AppState
-import ru.myproject.mytrranslator.model.datasource.DataSourceLocal
-import ru.myproject.mytrranslator.model.datasource.DataSourceRemote
-import ru.myproject.mytrranslator.model.repository.RepositoryImplementation
 import ru.myproject.mytrranslator.viewmodel.BaseViewModel
+import javax.inject.Inject
 
-class MainViewModel(
-    private val interactor: MainInteractor = MainInteractor(
-        RepositoryImplementation(DataSourceRemote()),
-        RepositoryImplementation(DataSourceLocal())
-    )
-) : BaseViewModel<AppState>() {
+class MainViewModel @Inject constructor(private val interactor: MainInteractor) :
+    BaseViewModel<AppState>() {
 
     // В этой переменной хранится последнее состояние Activity
     private var appState: AppState? = null
+
+    fun subscribe(): LiveData<AppState> {
+        return liveDataForViewToObserve
+    }
 
     // Переопределяем метод из BaseViewModel
     override fun getData(word: String, isOnline: Boolean): LiveData<AppState> {
@@ -29,6 +28,9 @@ class MainViewModel(
         )
         return super.getData(word, isOnline)
     }
+
+    private fun doOnSubscribe(): (Disposable) -> Unit =
+        { liveDataForViewToObserve.value = AppState.Loading(null) }
 
     private fun getObserver(): DisposableObserver<AppState> {
         return object : DisposableObserver<AppState>() {
