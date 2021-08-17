@@ -93,20 +93,11 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
         }
     }
 
-//    private fun iniViewModel() {
-//        if (main_activity_recyclerview.adapter != null) {
-//            throw IllegalStateException("The ViewModel should be initialised first")
-//        }
-//            // Теперь ViewModel инициализируется через функцию by viewModel()
-//            // Это функция, предоставляемая Koin из коробки
-//            val viewModel: MainViewModel by viewModel()
-//            model = viewModel
-//            model.subscribe().observe(this@MainActivity, Observer<AppState> {
-//                renderData(it) })
-//        }
-
     private fun iniViewModel() {
-        check(main_activity_recyclerview.adapter == null) { "The ViewModel should be initialised first" }
+        if (main_activity_recyclerview.adapter != null) {
+            throw IllegalStateException("The ViewModel should be initialised first")
+        }
+//        check(main_activity_recyclerview.adapter == null) { "The ViewModel should be initialised first" }
         // Теперь ViewModel инициализируется через функцию by viewModel()
         // Это функция, предоставляемая Koin из коробки
         val viewModel: MainViewModel by viewModel()
