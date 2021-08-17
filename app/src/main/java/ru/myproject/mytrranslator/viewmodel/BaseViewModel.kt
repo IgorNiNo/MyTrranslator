@@ -6,7 +6,7 @@ import kotlinx.coroutines.*
 import ru.myproject.mytrranslator.model.data.AppState
 
 abstract class BaseViewModel<T : AppState>(
-    protected open val _mutableLiveData: MutableLiveData<T> = MutableLiveData()
+    protected val _mutableLiveData: MutableLiveData<T> = MutableLiveData()
 ) : ViewModel() {
 
     // Объявляем свой собственный скоуп
