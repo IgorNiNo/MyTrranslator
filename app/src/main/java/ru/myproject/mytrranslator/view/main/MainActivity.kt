@@ -6,9 +6,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.myproject.mytrranslator.R
 import ru.myproject.mytrranslator.model.data.AppState
@@ -16,14 +14,10 @@ import ru.myproject.mytrranslator.model.data.DataModel
 import ru.myproject.mytrranslator.utils.network.isOnline
 import ru.myproject.mytrranslator.view.base.BaseActivity
 import ru.myproject.mytrranslator.view.main.adapter.MainAdapter
-import javax.inject.Inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 // Контракта уже нет
 class MainActivity : BaseActivity<AppState, MainInteractor>() {
-
-    // Внедряем фабрику для создания ViewModel
-    @Inject
-    internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     // Создаём модель
     override lateinit var model: MainViewModel
@@ -60,24 +54,11 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
             }
         }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        // Сообщаем Dagger’у, что тут понадобятся зависимости
-        AndroidInjection.inject(this)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // Фабрика уже готова, можно создавать ViewModel
-        model = viewModelFactory.create(MainViewModel::class.java)
-        model.subscribe().observe(this@MainActivity, Observer<AppState> {
-            renderData(it)
-        })
-
-        search_fab.setOnClickListener(fabClickListener)
-        main_activity_recyclerview.layoutManager = LinearLayoutManager(applicationContext)
-        main_activity_recyclerview.adapter = adapter
+        iniViewModel()
+        initViews()
     }
 
     override fun renderData(appState: AppState) {
@@ -110,6 +91,26 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
                 showAlertDialog(getString(R.string.error_stub), appState.error.message)
             }
         }
+    }
+
+    private fun iniViewModel() {
+        if (main_activity_recyclerview.adapter != null) {
+            throw IllegalStateException("The ViewModel should be initialised first")
+        }
+//        check(main_activity_recyclerview.adapter == null) { "The ViewModel should be initialised first" }
+        // Теперь ViewModel инициализируется через функцию by viewModel()
+        // Это функция, предоставляемая Koin из коробки
+        val viewModel: MainViewModel by viewModel()
+        model = viewModel
+        model.subscribe().observe(this@MainActivity, Observer<AppState> {
+            renderData(it)
+        })
+    }
+
+    private fun initViews() {
+        search_fab.setOnClickListener(fabClickListener)
+        main_activity_recyclerview.layoutManager = LinearLayoutManager(applicationContext)
+        main_activity_recyclerview.adapter = adapter
     }
 
     private fun showViewWorking() {
