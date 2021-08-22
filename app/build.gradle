@@ -66,6 +66,14 @@ dependencies {
     implementation 'org.koin:koin-android:2.0.1'
     implementation 'org.koin:koin-android-viewmodel:2.0.1'
 
+    // Download images
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    kapt 'com.github.bumptech.glide:compiler:4.9.0'
+
     // Test
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.4.0'

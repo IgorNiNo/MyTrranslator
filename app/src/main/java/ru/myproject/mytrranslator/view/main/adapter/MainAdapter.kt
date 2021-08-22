@@ -41,15 +41,18 @@ class MainAdapter(
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.header_textview_recycler_item.text = data.text
                 itemView.description_textview_recycler_item.text = convertMeaningsToString(data.meanings!!)
+                // Вешаем слушатель
                 itemView.setOnClickListener { openInNewWindow(data) }
             }
         }
     }
 
+    // Передаём событие в MainActivity
     private fun openInNewWindow(listItemData: DataModel) {
         onListItemClickListener.onItemClick(listItemData)
     }
 
+    // Определяем интерфейс обратного вызова
     interface OnListItemClickListener {
         fun onItemClick(data: DataModel)
     }

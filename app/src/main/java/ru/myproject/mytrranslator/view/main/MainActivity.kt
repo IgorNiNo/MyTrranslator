@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,6 +14,8 @@ import ru.myproject.mytrranslator.utils.network.isOnline
 import ru.myproject.mytrranslator.view.base.BaseActivity
 import ru.myproject.mytrranslator.view.main.adapter.MainAdapter
 import org.koin.android.viewmodel.ext.android.viewModel
+import ru.myproject.mytrranslator.utils.convertMeaningsToString
+import ru.myproject.mytrranslator.view.descriptionscreen.DescriptionActivity
 
 // Контракта уже нет
 class MainActivity : BaseActivity<AppState, MainInteractor>() {
@@ -22,7 +23,7 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
     // Создаём модель
     override lateinit var model: MainViewModel
 
-    // Адаптер для отображения списка вариантов перевода
+    // Передаём в адаптер слушатель нажатия на список
     private val adapter: MainAdapter by lazy {
         MainAdapter(onListItemClickListener)
     }
@@ -38,7 +39,14 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
     private val onListItemClickListener: MainAdapter.OnListItemClickListener =
         object : MainAdapter.OnListItemClickListener {
             override fun onItemClick(data: DataModel) {
-                Toast.makeText(this@MainActivity, data.text, Toast.LENGTH_SHORT).show()
+                startActivity(
+                    DescriptionActivity.getIntent(
+                        this@MainActivity,
+                        data.text!!,
+                        convertMeaningsToString(data.meanings!!),
+                        data.meanings[0].imageUrl
+                    )
+                )
             }
         }
 
