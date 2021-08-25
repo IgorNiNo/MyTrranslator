@@ -1,11 +1,11 @@
 package ru.myproject.mytrranslator.view.main
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.myproject.mytrranslator.R
 import ru.myproject.mytrranslator.model.data.AppState
@@ -16,6 +16,7 @@ import ru.myproject.mytrranslator.view.main.adapter.MainAdapter
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.myproject.mytrranslator.utils.convertMeaningsToString
 import ru.myproject.mytrranslator.view.descriptionscreen.DescriptionActivity
+import ru.myproject.mytrranslator.view.history.HistoryActivity
 
 // Контракта уже нет
 class MainActivity : BaseActivity<AppState, MainInteractor>() {
@@ -69,35 +70,22 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
         initViews()
     }
 
-    override fun renderData(appState: AppState) {
-        when (appState) {
-            is AppState.Success -> {
-                showViewWorking()
-                val data = appState.data
-                if (data.isNullOrEmpty()) {
-                    showAlertDialog(
-                        getString(R.string.dialog_tittle_sorry),
-                        getString(R.string.empty_server_response_on_success)
-                    )
-                } else {
-                    adapter.setData(data)
-                }
+    override fun setDataToAdapter(data: List<DataModel>) {
+        adapter.setData(data)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.history_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_history -> {
+                startActivity(Intent(this, HistoryActivity::class.java))
+                true
             }
-            is AppState.Loading -> {
-                showViewLoading()
-                if (appState.progress != null) {
-                    progress_bar_horizontal.visibility = VISIBLE
-                    progress_bar_round.visibility = GONE
-                    progress_bar_horizontal.progress = appState.progress
-                } else {
-                    progress_bar_horizontal.visibility = GONE
-                    progress_bar_round.visibility = VISIBLE
-                }
-            }
-            is AppState.Error -> {
-                showViewWorking()
-                showAlertDialog(getString(R.string.error_stub), appState.error.message)
-            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -105,9 +93,7 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
         if (main_activity_recyclerview.adapter != null) {
             throw IllegalStateException("The ViewModel should be initialised first")
         }
-//        check(main_activity_recyclerview.adapter == null) { "The ViewModel should be initialised first" }
-        // Теперь ViewModel инициализируется через функцию by viewModel()
-        // Это функция, предоставляемая Koin из коробки
+        // Теперь ViewModel инициализируется через функцию by viewModel(). Это функция, предоставляемая Koin из коробки
         val viewModel: MainViewModel by viewModel()
         model = viewModel
         model.subscribe().observe(this@MainActivity, Observer<AppState> {
@@ -117,16 +103,7 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
 
     private fun initViews() {
         search_fab.setOnClickListener(fabClickListener)
-        main_activity_recyclerview.layoutManager = LinearLayoutManager(applicationContext)
         main_activity_recyclerview.adapter = adapter
-    }
-
-    private fun showViewWorking() {
-        loading_frame_layout.visibility = GONE
-    }
-
-    private fun showViewLoading() {
-        loading_frame_layout.visibility = VISIBLE
     }
 
     companion object {

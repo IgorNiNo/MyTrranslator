@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.myproject.mytrranslator.model.data.AppState
-import ru.myproject.mytrranslator.utils.parseSearchResults
+import ru.myproject.mytrranslator.utils.parseOnlineSearchResults
 import ru.myproject.mytrranslator.viewmodel.BaseViewModel
 
 class MainViewModel(private val interactor: MainInteractor) :
@@ -32,7 +32,7 @@ class MainViewModel(private val interactor: MainInteractor) :
     // Это же касается и Room
     private suspend fun startInteractor(word: String, isOnline: Boolean) =
         withContext(Dispatchers.IO) {
-            _mutableLiveData.postValue(parseSearchResults(interactor.getData(word, isOnline)))
+            _mutableLiveData.postValue(parseOnlineSearchResults(interactor.getData(word, isOnline)))
         }
 
     // Обрабатываем ошибки

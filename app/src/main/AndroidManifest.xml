@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTrranslator"
         tools:replace="android:allowBackup">
-        <activity android:name=".view.main.MainActivity">
+        <activity android:name=".view.main.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,6 +25,10 @@
         </activity>
         <activity
             android:name=".view.descriptionscreen.DescriptionActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.history.HistoryActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>
