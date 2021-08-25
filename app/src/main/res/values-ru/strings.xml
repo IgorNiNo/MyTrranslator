@@ -16,4 +16,6 @@
     <string name="dialog_title_stub">Неопределенная ошибка</string>
     <string name="error_stub">Ошибка</string>
     <string name="dialog_tittle_sorry">Сожалею</string>
+    <string name="image_stub">Изображение</string>
+    <string name="menu_title_history">История</string>
 </resources>
