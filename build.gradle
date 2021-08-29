@@ -6,6 +6,7 @@ buildscript {
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -20,6 +21,27 @@ allprojects {
         google()
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
+    }
+}
+
+// For all subprojects - generate compileSdkVersion, minSdkVersion, targetSdkVersion and Java compatibility
+subprojects {
+    afterEvaluate { project ->
+        if (project.plugins.findPlugin('android') ?: project.plugins.findPlugin('android-library')) {
+            android {
+                compileSdkVersion Config.compile_sdk
+
+                defaultConfig {
+                    minSdkVersion Config.min_sdk
+                    targetSdkVersion Config.target_sdk
+                }
+
+                compileOptions {
+                    sourceCompatibility Config.java_version
+                    targetCompatibility Config.java_version
+                }
+            }
+        }
     }
 }
 
