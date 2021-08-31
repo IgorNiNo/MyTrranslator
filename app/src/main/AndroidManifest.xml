@@ -28,7 +28,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".view.history.HistoryActivity"
+            android:name=".view.historyScreen.HistoryActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>

@@ -8,3 +8,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+/core/src/androidTest/
+/core/src/test/
+core/consumer-rules.pro
+core/proguard-rules.pro

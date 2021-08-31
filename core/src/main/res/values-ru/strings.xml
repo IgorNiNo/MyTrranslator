@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="dialog_title_device_is_offline">Нет соединения с интернетом</string>
+    <string name="dialog_message_device_is_offline">Вы не можете использовать приложение без подключения к Интернету.
+        Пожалуйста, проверьте подключение к Интернету.
+    </string>
+    <string name="dialog_tittle_sorry">Сожалею</string>
+    <string name="empty_server_response_on_success">Сервер не отвечает</string>
+    <string name="error_stub">Ошибка</string>
+</resources>

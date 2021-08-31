@@ -8,15 +8,15 @@ import android.view.View
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.myproject.mytrranslator.R
-import ru.myproject.mytrranslator.model.data.AppState
-import ru.myproject.mytrranslator.model.data.DataModel
-import ru.myproject.mytrranslator.utils.network.isOnline
-import ru.myproject.mytrranslator.view.base.BaseActivity
+import ru.myproject.utils.network.isOnline
 import ru.myproject.mytrranslator.view.main.adapter.MainAdapter
 import org.koin.android.viewmodel.ext.android.viewModel
-import ru.myproject.mytrranslator.utils.convertMeaningsToString
+import ru.myproject.core.BaseActivity
+import ru.myproject.historyscreen.view.HistoryActivity
+import ru.myproject.model.data.AppState
+import ru.myproject.model.data.DataModel
+import ru.myproject.mytrranslator.convertMeaningsToString
 import ru.myproject.mytrranslator.view.descriptionscreen.DescriptionActivity
-import ru.myproject.mytrranslator.view.history.HistoryActivity
 
 // Контракта уже нет
 class MainActivity : BaseActivity<AppState, MainInteractor>() {
@@ -45,7 +45,7 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
                         this@MainActivity,
                         data.text!!,
                         convertMeaningsToString(data.meanings!!),
-                        data.meanings[0].imageUrl
+                        data.meanings!![0].imageUrl
                     )
                 )
             }
