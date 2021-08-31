@@ -5,9 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main_recyclerview_item.view.*
+import ru.myproject.model.data.DataModel
 import ru.myproject.mytrranslator.R
-import ru.myproject.mytrranslator.model.data.DataModel
-import ru.myproject.mytrranslator.utils.convertMeaningsToString
+import ru.myproject.mytrranslator.convertMeaningsToString
 
 class MainAdapter(
     private var onListItemClickListener: OnListItemClickListener

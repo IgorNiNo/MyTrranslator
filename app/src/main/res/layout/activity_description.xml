@@ -34,7 +34,7 @@
             android:layout_marginStart="@dimen/margin_medium"
             tools:text="Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." />
 
-        <ru.myproject.mytrranslator.utils.ui.EquilateralImageView
+        <ru.myproject.utils.ui.EquilateralImageView
             android:id="@+id/description_imageview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

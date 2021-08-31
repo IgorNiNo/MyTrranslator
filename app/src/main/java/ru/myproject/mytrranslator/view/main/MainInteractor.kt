@@ -1,10 +1,10 @@
 package ru.myproject.mytrranslator.view.main
 
-import ru.myproject.mytrranslator.model.data.AppState
-import ru.myproject.mytrranslator.model.data.DataModel
-import ru.myproject.mytrranslator.model.repository.Repository
-import ru.myproject.mytrranslator.model.repository.RepositoryLocal
-import ru.myproject.mytrranslator.viewmodel.Interactor
+import ru.myproject.core.viewmodel.Interactor
+import ru.myproject.model.data.AppState
+import ru.myproject.model.data.DataModel
+import ru.myproject.repository.Repository
+import ru.myproject.repository.RepositoryLocal
 
 class MainInteractor(
     private val repositoryRemote: Repository<List<DataModel>>,

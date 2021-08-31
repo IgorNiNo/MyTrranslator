@@ -2,16 +2,16 @@ package ru.myproject.mytrranslator.di
 
 import androidx.room.Room
 import org.koin.dsl.module
-import ru.myproject.mytrranslator.model.data.DataModel
-import ru.myproject.mytrranslator.model.datasource.RetrofitImplementation
-import ru.myproject.mytrranslator.model.datasource.RoomDataBaseImplementation
-import ru.myproject.mytrranslator.model.repository.Repository
-import ru.myproject.mytrranslator.model.repository.RepositoryImplementation
-import ru.myproject.mytrranslator.model.repository.RepositoryImplementationLocal
-import ru.myproject.mytrranslator.model.repository.RepositoryLocal
-import ru.myproject.mytrranslator.room.HistoryDataBase
-import ru.myproject.mytrranslator.view.history.HistoryInteractor
-import ru.myproject.mytrranslator.view.history.HistoryViewModel
+import ru.myproject.historyscreen.view.HistoryInteractor
+import ru.myproject.historyscreen.view.HistoryViewModel
+import ru.myproject.model.data.DataModel
+import ru.myproject.repository.RetrofitImplementation
+import ru.myproject.repository.RoomDataBaseImplementation
+import ru.myproject.repository.Repository
+import ru.myproject.repository.RepositoryImplementation
+import ru.myproject.repository.RepositoryImplementationLocal
+import ru.myproject.repository.RepositoryLocal
+import ru.myproject.repository.room.HistoryDataBase
 import ru.myproject.mytrranslator.view.main.MainInteractor
 import ru.myproject.mytrranslator.view.main.MainViewModel
 
