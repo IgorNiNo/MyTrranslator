@@ -32,6 +32,8 @@ android {
     kotlinOptions {
         jvmTarget = Releases.version_kotlin_jvmTarget
     }
+
+    dynamicFeatures = [Modules.historyScreen]
 }
 
 dependencies {
@@ -40,7 +42,6 @@ dependencies {
     implementation project(Modules.model)
     implementation project(Modules.utils)
     implementation project(Modules.repository)
-    implementation project(Modules.historyScreen) //Feature
 
     // AndroidX
     implementation Design.appcompat
@@ -58,16 +59,6 @@ dependencies {
     // Coroutines
     implementation Kotlin.coroutines_core
     implementation Kotlin.coroutines_android
-
-//    // Rx-Java
-//    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-//    implementation 'io.reactivex.rxjava2:rxjava:2.2.20'
-
-    // Retrofit 2
-    implementation Retrofit.retrofit
-    implementation Retrofit.converter_gson
-    implementation Retrofit.logging_interceptor
-    implementation Retrofit.adapter_coroutines
 
     //Koin for Android
     implementation Koin.koin_android
@@ -87,6 +78,9 @@ dependencies {
     implementation Room.runtime
     kapt Room.compiler
     implementation Room.room_ktx
+
+    //Google Play libraries
+    implementation GooglePlay.googlePlayCore
 
     // Test
     testImplementation TestImpl.junit

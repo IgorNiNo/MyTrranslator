@@ -6,16 +6,9 @@
     <string name="delete_description">X</string>
     <string name="error_textview_stub">Ошибка</string>
     <string name="reload_button">Перезагрузить</string>
-<!--    <string name="empty_server_response_on_success">Сервер не отвечает</string>-->
     <string name="undefined_error">Неизвестная ошибка</string>
-<!--    <string name="dialog_title_device_is_offline">Нет соединения с интернетом</string>-->
-<!--    <string name="dialog_message_device_is_offline">Вы не можете использовать приложение без подключения к Интернету.-->
-<!--        Пожалуйста, проверьте подключение к Интернету.-->
-<!--    </string>-->
-<!--    <string name="dialog_button_cancel">Отмена</string>-->
-<!--    <string name="dialog_title_stub">Неопределенная ошибка</string>-->
-<!--    <string name="error_stub">Ошибка</string>-->
-<!--    <string name="dialog_tittle_sorry">Сожалею</string>-->
     <string name="image_stub">Изображение</string>
     <string name="menu_title_history">История</string>
+    <string name="title_historyscreenfeature">Фича экрана истории</string>
+    <string name="Couldnt_download_feature">Не удалось скачать Фичу: </string>
 </resources>
