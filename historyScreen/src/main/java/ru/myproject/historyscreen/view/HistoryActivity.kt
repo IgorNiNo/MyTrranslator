@@ -6,6 +6,7 @@ import kotlinx.android.synthetic.main.activity_history.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.myproject.core.BaseActivity
 import ru.myproject.historyscreen.R
+import ru.myproject.historyscreen.injectDependencies
 import ru.myproject.model.data.AppState
 import ru.myproject.model.data.DataModel
 
@@ -31,9 +32,8 @@ class HistoryActivity : BaseActivity<AppState, HistoryInteractor>() {
     }
 
     private fun iniViewModel() {
-        if (history_activity_recyclerview.adapter != null) {
-            throw IllegalStateException("The ViewModel should be initialised first")
-        }
+        check(history_activity_recyclerview.adapter == null) { "The ViewModel should be initialised first" }
+        injectDependencies()
         val viewModel: HistoryViewModel by viewModel()
         model = viewModel
         model.subscribe().observe(this@HistoryActivity, Observer<AppState> { renderData(it) })

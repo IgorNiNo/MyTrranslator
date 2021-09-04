@@ -1,9 +1,8 @@
 package ru.myproject.mytrranslator.di
 
 import androidx.room.Room
+import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
-import ru.myproject.historyscreen.view.HistoryInteractor
-import ru.myproject.historyscreen.view.HistoryViewModel
 import ru.myproject.model.data.DataModel
 import ru.myproject.repository.RetrofitImplementation
 import ru.myproject.repository.RoomDataBaseImplementation
@@ -14,6 +13,15 @@ import ru.myproject.repository.RepositoryLocal
 import ru.myproject.repository.room.HistoryDataBase
 import ru.myproject.mytrranslator.view.main.MainInteractor
 import ru.myproject.mytrranslator.view.main.MainViewModel
+
+// Объявим функцию, которая будет создавать зависимости по требованию
+fun injectDependencies() = loadModules
+
+// Ленивая инициализация создаст зависимости только тогда, когда функция будет вызвана
+private val loadModules by lazy {
+    // Функция библиотеки Koin
+    loadKoinModules(listOf(application, mainScreen))
+}
 
 val application = module {
     // single указывает, что БД должна быть в единственном экземпляре
@@ -41,8 +49,4 @@ val mainScreen = module {
     factory { MainInteractor(get(), get()) }
 }
 
-val historyScreen = module {
-    factory { HistoryViewModel(get()) }
-    factory { HistoryInteractor(get(), get()) }
-}
 
